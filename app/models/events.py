@@ -1,8 +1,7 @@
 from app.core import logger
-from app.core.config import (DATABASE_URL, MAX_CONNECTIONS_COUNT,
-                             MIN_CONNECTIONS_COUNT)
+from app.core.config import DATABASE_URL
 from fastapi import FastAPI
-from motor.motor_asyncio import AsyncIOMotorClient
+from motor.motor_asyncio import AsyncIOMotorClient  # type: ignore
 
 
 async def connect_to_db(app: FastAPI) -> None:
