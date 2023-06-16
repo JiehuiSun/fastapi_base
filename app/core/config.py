@@ -1,8 +1,6 @@
 import logging
 
 # from app.core.logging import InterceptHandler
-from databases import DatabaseURL
-# from loguru import logger
 from starlette.config import Config
 from starlette.datastructures import Secret
 
