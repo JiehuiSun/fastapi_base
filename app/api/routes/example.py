@@ -5,7 +5,7 @@ from fastapi import APIRouter, exceptions, status
 from fastapi.requests import Request
 
 from app.core import logger
-from app.models.domain.example import Example
+from app.models.domain.example import ExampleModel
 from app.models.schemas.example import ExampleData, ExampleInResponse
 
 router = APIRouter()
@@ -14,10 +14,14 @@ router = APIRouter()
 @router.get("/", response_model=ExampleInResponse, name="index")
 async def on_example(request: Request):
     logger.info("Example start..")
-    coll = request.app.state.db.test
+    logger.info(request.url)
     try:
-        result: Example = await coll.find_one({})
+        # coll = request.app.state.db.test
+        # result: Example = await coll.find_one({})
+        # or
+        result = await ExampleModel.find_one({})
     except Exception as e:
+        logger.error(e)
         raise exceptions.HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=type(e).__name__
         )
@@ -34,13 +38,18 @@ async def on_example(request: Request):
 @router.post("/", response_model=ExampleInResponse, name="session")
 async def on_example_session(request: Request):
     logger.info("Example start..")
-    coll = request.app.state.db.test
     # Session
     try:
-        async with await request.app.state.mongodb_client.start_session() as s:
+        async with await request.app.state.motor_client.start_session() as s:
             async with s.start_transaction():
-                await coll.insert_one({"test": "sessionInsert2"}, session=s)
-                await coll.insert_one({"_id": 1, "test": "sessionInsert"}, session=s)
+                # coll = request.app.state.db.test
+                # await coll.insert_one({"test": "sessionInsert2"}, session=s)
+                # await coll.insert_one({"_id": 1, "test": "sessionInsert"}, session=s)
+                # or
+                await ExampleModel.insert_one({"test": "sessionInsert2"}, session=s)
+                await ExampleModel.insert_one(
+                    {"_id": 1, "test": "sessionInsert"}, session=s
+                )
     except Exception as e:
         raise exceptions.HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=type(e).__name__

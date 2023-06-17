@@ -18,6 +18,7 @@ databases = "^0.7.0"
 uvicorn = "^0.22.0"
 motor = "^3.1.2"
 black = "^23.3.0"
+pytz = "^2023.3"
 
 
 [build-system]

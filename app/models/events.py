@@ -1,30 +1,30 @@
+import importlib
+import os
+
 from fastapi import FastAPI
-from motor.motor_asyncio import AsyncIOMotorClient  # type: ignore
-from pymongo.read_concern import ReadConcern
-from pymongo.read_preferences import ReadPreference
-from pymongo.write_concern import WriteConcern
 
 from app.core import logger
-from app.core.config import DATABASE_URL, MRS_READ_CONCERN, MRS_WRITE_CONCERN
 
 
-async def connect_to_db(app: FastAPI) -> None:
-    logger.info("Connecting to %s", DATABASE_URL)
+async def init_indexs(app: FastAPI) -> None:
+    logger.info("Init index start..")
+    models_pack_path: str = "app/models/domain"
+    os.chdir(models_pack_path)
 
-    app.state.mongodb_client = AsyncIOMotorClient(DATABASE_URL)
-    # app.state.mongodb_client.get_io_loop = asyncio.get_running_loop
-    app.state.db = app.state.mongodb_client.get_default_database(
-        read_concern=ReadConcern(MRS_READ_CONCERN),
-        write_concern=WriteConcern(w=MRS_WRITE_CONCERN),
-        read_preference=ReadPreference.PRIMARY_PREFERRED
-    )
+    for module in os.listdir("."):
+        if module.endswith(".py") and module != "__init__.py":
+            mo = importlib.import_module(
+                f'{models_pack_path.replace("/", ".")}.{module.replace(".py", "")}'
+            )
+            models = []
+            for model in dir(mo):
+                if isinstance(getattr(mo, model), type) and getattr(
+                    getattr(mo, model), "__coll__", None
+                ):
+                    models.append(getattr(mo, model))
 
-    logger.info("Connection established")
+            for model in models:
+                if init_idx := getattr(model, "init_index", None):
+                    await init_idx()
 
-
-async def close_db_connection(app: FastAPI) -> None:
-    logger.info("Closing connection to database")
-
-    app.state.mongodb_client.close()
-
-    logger.info("Connection closed")
+    logger.info("Init index success..")
