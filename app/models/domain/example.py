@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
 
-class Example():
+from . import BaseModel
+
+
+class Example(BaseModel):
     field: str

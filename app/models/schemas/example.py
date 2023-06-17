@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from app.models.schemas import BaseModel, BaseSchema, BaseRsp
+from app.models.schemas import BaseModel, BaseRsp, BaseSchema
 
 
 class ExampleData(BaseModel):

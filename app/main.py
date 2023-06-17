@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
@@ -23,14 +23,11 @@ def get_application() -> FastAPI:
         allow_headers=["*"],
     )
 
-    application.add_event_handler(
-        "startup", create_start_app_handler(application))
-    application.add_event_handler(
-        "shutdown", create_stop_app_handler(application))
+    application.add_event_handler("startup", create_start_app_handler(application))
+    application.add_event_handler("shutdown", create_stop_app_handler(application))
 
     application.add_exception_handler(HTTPException, http_error_handler)
-    application.add_exception_handler(
-        RequestValidationError, http422_error_handler)
+    application.add_exception_handler(RequestValidationError, http422_error_handler)
 
     application.include_router(api_router, prefix=API_PREFIX)
 
