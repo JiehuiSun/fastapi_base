@@ -2,44 +2,24 @@
 
 *fastapi + mongodb*
 
-### Structure
+## Clone
 ```shell
-├── README.md
-├── app
-│   ├── __init__.py
-│   ├── api
-│   │   ├── __init__.py
-│   │   ├── errors
-│   │   │   ├── __init__.py
-│   │   │   ├── http_error.py
-│   │   │   └── validation_error.py
-│   │   └── routes
-│   │       ├── __init__.py
-│   │       ├── api.py
-│   │       └── example.py
-│   ├── core
-│   │   ├── __init__.py
-│   │   ├── config.py
-│   │   ├── events.py
-│   │   └── logging.py
-│   ├── main.py
-│   ├── models
-│   │   ├── __init__.py
-│   │   ├── common.py
-│   │   ├── domain
-│   │   │   ├── __init__.py
-│   │   │   ├── base_model.py
-│   │   │   └── example.py
-│   │   ├── events.py
-│   │   └── schemas
-│   │       ├── __init__.py
-│   │       └── example.py
-│   └── utils
-│       └── __init__.py
-├── poetry.lock
-├── pyproject.toml
-├── requirements.txt
-└── tests
-    └── __init__.py
+$ git clone https://github.com/JiehuiSun/fastapi_base.git
 ```
-...
+
+## Installation
+### PIP
+```shell
+$ python -m venv .venv &&source .venv/bin/activate &&pip install -r ./requirements.txt
+```
+
+### Poetry
+```shell
+$ poetry new
+$ poetry install
+```
+
+### Start
+```shell
+$ uvicorn app.main:app --reload
+```
